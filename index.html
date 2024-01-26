@@ -170,7 +170,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2024-01-26 15:49:57 / Modified: 15:54:03" itemprop="dateCreated datePublished" datetime="2024-01-26T15:49:57+08:00">2024-01-26</time>
+              <time title="Created: 2024-01-26 15:49:57 / Modified: 16:01:52" itemprop="dateCreated datePublished" datetime="2024-01-26T15:49:57+08:00">2024-01-26</time>
             </span>
 
           
@@ -193,7 +193,7 @@
 <li>最后反馈模型的利润率、最大回撤、夏普指数、交易次数等详细信息。</li>
 </ol>
 <h3 id="二、特征选取"><a href="#二、特征选取" class="headerlink" title="二、特征选取"></a>二、特征选取</h3><h4 id="1-布林线"><a href="#1-布林线" class="headerlink" title="1. 布林线"></a>1. 布林线</h4><p>布林线指标（Bollinger Bands），主要利用统计原理，求出股价的移动平均值、标准差及其信赖区间，从而确定股价的波动范围及未来走势，利用波带显示股价的安全高低价位。</p>
-<p><img src="/.%5Cpic1.png"></p>
+<p><img src="/pic/B1P1.png" alt="img"></p>
 <center>图1 训练集股票1中2021年10月至2023年1月布林线指标。绿色实线为股票价格，上下红色虚线为上轨线和下轨线，中间黄色点划线为中轨线。</center>
 
 <p>布林线指标属于路径指标，股价波动在上限和下限的区间之内，这条带状区的宽窄，随着股价波动幅度的大小而变化，股价涨跌幅度加大时，带状区变宽，涨跌幅度狭小盘整时，带状区则变窄。</p>
@@ -202,7 +202,7 @@
 
 <p>其中的UP、MD、DN分别表示上、中、下轨线。</p>
 <h4 id="2-CCI"><a href="#2-CCI" class="headerlink" title="2. CCI"></a>2. CCI</h4><p>CCI（Commodity Channel Index）指标又叫顺势指标，是一种专门测量股价或外汇是否已超出常态分布范围的指标。</p>
-<p><img src="/.%5Cpic2.png"></p>
+<p><img src="/pic/B1P2.png" alt="img"></p>
 <center>图2 训练集股票1中2021年10月至2023年1月CCI指标。绿色实线为股票价格，红色实线为CCI指标。</center>
 
 <p>CCI指标属于超买超卖类指标中较为特殊的一种，波动在正无穷大和负无穷大之间，但又不需要以0为中轴线。因此CCI不会出现指标钝化现象，有利于投资者更好地研判行情，特别是那些短期内暴涨暴跌的非常态行情。这对于我们在股票市场上追涨杀跌、短期获得较高收益率由较大的帮助。</p>
@@ -228,7 +228,7 @@
 <p>基于以上标准我们确定了买卖标志的BOLL定量模型：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">&#x27;BOLL_last&#x27;</span>] = df[<span class="string">&#x27;BOLL&#x27;</span>].shift(<span class="number">1</span>)</span><br><span class="line">df[<span class="string">&#x27;Signal_BOLL&#x27;</span>] = np.where(df[<span class="string">&#x27;BOLL&#x27;</span>] &gt; <span class="number">1</span>, -<span class="number">1.0</span>, <span class="number">0.0</span>)\</span><br><span class="line">    + np.where((df[<span class="string">&#x27;BOLL&#x27;</span>] &lt; -<span class="number">1</span>) &amp; (df[<span class="string">&#x27;BOLL_last&#x27;</span>] &gt; -<span class="number">1</span>), <span class="number">0.5</span>, <span class="number">0.0</span>)\</span><br><span class="line">    + np.where((df[<span class="string">&#x27;BOLL&#x27;</span>] &lt; -<span class="number">1</span>) &amp; (df[<span class="string">&#x27;BOLL_last&#x27;</span>] &lt;= -<span class="number">1</span>), <span class="number">1.0</span>, <span class="number">0.0</span>)\</span><br><span class="line">    + np.where((df[<span class="string">&#x27;BOLL_last&#x27;</span>] &gt; <span class="number">0</span>) &amp; (df[<span class="string">&#x27;BOLL&#x27;</span>] &lt; <span class="number">0</span>), -<span class="number">0.5</span>, <span class="number">0.0</span>)\</span><br><span class="line">    + np.where((df[<span class="string">&#x27;BOLL_last&#x27;</span>] &lt; <span class="number">0</span>) &amp; (df[<span class="string">&#x27;BOLL&#x27;</span>] &gt; <span class="number">0</span>), <span class="number">0.5</span>, <span class="number">0.0</span>)</span><br></pre></td></tr></table></figure>
 <p>其中的正向信号表示买入，负向信号表示卖出，而值的多少（通常为0.5或者1.0）表示了买入信号的强烈与否。例如1.0的指标表示建议将所有现金梭哈股市；-0.5的指标则是建议卖出一半的股票转为流动资本。后续的信号系统与此一致。</p>
-<p><img src="/.%5Cpic3.png"></p>
+<p><img src="/pic/B1P3.png" alt="img"></p>
 <center>图3 训练集股票1中2021年10月至2023年1月由布林线指标确定的买卖标志（蓝色线）。</center>
 
 <h4 id="2-CCI-1"><a href="#2-CCI-1" class="headerlink" title="2. CCI"></a>2. CCI</h4><p>CCI指标在+100线（也叫天线）~ -100线（也叫地线）的常态区间里运行时，参考意义不大，可以用布林线等其它技术指标进行研判。（这也意味着我们确定权重时的先后顺序）</p>
@@ -243,7 +243,7 @@
 <p>基于以上标准我们确定了买卖标志的CCI定量模型：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">&#x27;CCI_last&#x27;</span>] = df[<span class="string">&#x27;CCI&#x27;</span>].shift(<span class="number">1</span>)</span><br><span class="line">df[<span class="string">&#x27;Signal_CCI&#x27;</span>] = np.where((df[<span class="string">&#x27;CCI_last&#x27;</span>] &lt;= <span class="number">100</span>) &amp; (df[<span class="string">&#x27;CCI&#x27;</span>] &gt; <span class="number">100</span>), <span class="number">1</span>, <span class="number">0.0</span>)\</span><br><span class="line">    +np.where((df[<span class="string">&#x27;CCI_last&#x27;</span>] &gt;= -<span class="number">100</span>) &amp; (df[<span class="string">&#x27;CCI&#x27;</span>] &lt; -<span class="number">100</span>), -<span class="number">1</span>, <span class="number">0.0</span>)\</span><br><span class="line">    +np.where((df[<span class="string">&#x27;CCI_last&#x27;</span>] &lt;= -<span class="number">100</span>) &amp; (df[<span class="string">&#x27;CCI&#x27;</span>] &gt; -<span class="number">100</span>), <span class="number">0.5</span>, <span class="number">0.0</span>)\</span><br><span class="line">    +np.where((df[<span class="string">&#x27;CCI_last&#x27;</span>] &gt;= <span class="number">100</span>) &amp; (df[<span class="string">&#x27;CCI&#x27;</span>] &lt; <span class="number">100</span>), -<span class="number">1</span>, <span class="number">0.0</span>)</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.%5Cpic4.png"></p>
+<p><img src="/pic/B1P4.png" alt="img"></p>
 <center>图4 训练集股票1中2021年10月至2023年1月由CCI指标确定的买卖标志（蓝色线）。</center>
 
 <h4 id="3-其他指标"><a href="#3-其他指标" class="headerlink" title="3. 其他指标"></a>3. 其他指标</h4><p>MTM、涨停、复权等定性指标对于股票买卖策略的计算有着重要作用，但在机器学习的过程中表现欠佳，且该信号往往快速强烈，可以直接算出或用Pyalgotrade计算得出，因此不需要再进行机器学习的标签标记和模拟训练。</p>
@@ -256,7 +256,7 @@
 </ol>
 <p>而从“推荐买卖量”到“推荐持有量”在交易策略中以函数<code>Sig2sig(self, dataframe, column_name, new_column_name)</code>实现。</p>
 <p>在特征提取和标签插入的过程中，我们按照MTM-&gt;涨停复权-&gt;BOLL-&gt;CCI的先后顺序（优先级）来处理股票的各项指标。具体计算方法在模型文件MyModel.ipynb（代码块14）与交易文件MyStrategy.py（函数<code>onBars(self, bars)</code>）中都有所体现。</p>
-<p><img src="/.%5Cpic5.png"></p>
+<p><img src="/pic/B1P5.png" alt="img"></p>
 <center>图5 训练集股票1中各指标与最终推荐买卖量的相关系数</center>
 
 <h4 id="2-模型优化"><a href="#2-模型优化" class="headerlink" title="2. 模型优化"></a>2. 模型优化</h4><p>与样例文件不同，我们的模型本质上属于多分类问题，在测试极度随机树、逻辑回归、K近邻等分类模型之后，我们最终选择了支持向量机（SVM）进行分类和预测。多类分类器采用间接法，二分类器选择one-versus-one（ovo），核函数选择径向基函数（radial basis function）。Python代码如下：</p>
@@ -356,7 +356,7 @@
 <td align="center">266</td>
 </tr>
 </tbody></table>
-<p><img src="/.%5Cpic6.png"></p>
+<p><img src="/pic/B1P6.png" alt="img"></p>
 <center>图6 stock06（未用作训练数据）应用股票交易模型的收益情况</center>
 
 <p>各支股票收益率情况如表1。可以看出，12年间，股票收益普遍位于100%至200%之间，使用年金模型折算年化收益率约为6%~10%，在无组合资产投资方面属于较为先进的水平。</p>
